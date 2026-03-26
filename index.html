@@ -1,391 +1,1161 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yusuf Bağırov — 8 Mart Romantik Tebrik</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500&display=swap');
-        
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        .title-font {
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .snowflake {
-            position: absolute;
-            color: #f43f5e;
-            pointer-events: none;
-            user-select: none;
-            z-index: -1;
-            animation: fall linear infinite;
-        }
-        
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-            }
-        }
-        
-        .card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card:hover {
-            transform: translateY(-12px) scale(1.03);
-            box-shadow: 0 25px 50px -12px rgb(249 128 128);
-        }
-        
-        .modal {
-            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        @keyframes modalPop {
-            0% { transform: scale(0.6); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .hero-bg {
-            background: linear-gradient(135deg, #fff1f2 0%, #fce7f3 100%);
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>MathClass — Sinif Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0d1117;
+  --bg2:#161b22;
+  --bg3:#1c2333;
+  --border:#30363d;
+  --border2:#21262d;
+  --accent:#3b82f6;
+  --accent2:#60a5fa;
+  --accent-soft:rgba(59,130,246,0.12);
+  --green:#22c55e;
+  --green-soft:rgba(34,197,94,0.12);
+  --orange:#f59e0b;
+  --orange-soft:rgba(245,158,11,0.12);
+  --red:#ef4444;
+  --red-soft:rgba(239,68,68,0.12);
+  --purple:#a855f7;
+  --purple-soft:rgba(168,85,247,0.12);
+  --text:#e6edf3;
+  --text2:#8b949e;
+  --text3:#484f58;
+  --radius:14px;
+  --radius-sm:8px;
+  --shadow:0 4px 24px rgba(0,0,0,0.4);
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:24px 16px;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 10%, rgba(59,130,246,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 90%, rgba(168,85,247,0.10) 0%, transparent 55%),
+    var(--bg);
+}
+
+.login-logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:40px;
+  animation:fadeUp 0.6s ease both;
+}
+.login-logo-icon{
+  width:48px;height:48px;
+  background:linear-gradient(135deg,var(--accent),#1d4ed8);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  box-shadow:0 0 32px rgba(59,130,246,0.35);
+}
+.login-logo-text{
+  font-family:'Syne',sans-serif;
+  font-size:26px;font-weight:800;
+  letter-spacing:-0.02em;
+}
+.login-logo-text span{color:var(--accent2)}
+
+.login-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:36px 28px;
+  width:100%;
+  max-width:400px;
+  box-shadow:var(--shadow);
+  animation:fadeUp 0.7s 0.1s ease both;
+}
+
+.login-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
+
+.role-switch{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:24px;
+}
+.role-btn{
+  padding:12px 8px;
+  border-radius:10px;
+  border:1.5px solid var(--border);
+  background:transparent;
+  color:var(--text2);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-align:center;
+}
+.role-btn.active{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  color:var(--accent2);
+}
+
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.field label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2)}
+.field input{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 14px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px;color:var(--text);
+  outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,0.15)}
+.field input::placeholder{color:var(--text3)}
+
+.btn-primary{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--accent),#1d4ed8);
+  border:none;border-radius:10px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px;font-weight:700;
+  color:#fff;cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 4px 20px rgba(59,130,246,0.35);
+  margin-top:4px;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(59,130,246,0.45)}
+.btn-primary:active{transform:translateY(0)}
+
+.demo-hint{
+  margin-top:20px;
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:14px;
+  font-size:12px;color:var(--text2);
+  line-height:1.6;
+}
+.demo-hint strong{color:var(--text);display:block;margin-bottom:4px}
+
+/* ── APP SHELL ── */
+#app{display:none;min-height:100vh;flex-direction:column}
+
+/* ── TOP BAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,17,23,0.90);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border2);
+  padding:0 16px;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-logo{
+  font-family:'Syne',sans-serif;
+  font-size:18px;font-weight:800;
+  letter-spacing:-0.01em;
+}
+.topbar-logo span{color:var(--accent2)}
+.topbar-badge{
+  background:var(--accent-soft);
+  color:var(--accent2);
+  font-size:11px;font-weight:600;
+  padding:3px 9px;border-radius:20px;
+  border:1px solid rgba(59,130,246,0.25);
+}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:#fff;
+}
+.logout-btn{
+  background:none;border:1px solid var(--border);
+  border-radius:8px;padding:6px 12px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12px;color:var(--text2);cursor:pointer;
+  transition:all 0.2s;
+}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* ── NAV TABS ── */
+.nav-tabs{
+  display:flex;
+  overflow-x:auto;
+  gap:4px;
+  padding:8px 16px;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border2);
+  scrollbar-width:none;
+}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{
+  flex-shrink:0;
+  padding:8px 16px;
+  border-radius:8px;
+  border:none;
+  background:transparent;
+  color:var(--text2);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:500;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all 0.2s;
+  display:flex;align-items:center;gap:6px;
+}
+.nav-tab.active{background:var(--accent-soft);color:var(--accent2)}
+.nav-tab:hover:not(.active){background:var(--bg3);color:var(--text)}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;padding:20px 16px;max-width:600px;margin:0 auto;width:100%}
+
+/* ── PANELS ── */
+.panel{display:none;animation:fadeUp 0.35s ease both}
+.panel.active{display:block}
+
+/* ── STAT CARDS ── */
+.stats-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:20px;
+}
+.stat-card{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:16px;
+}
+.stat-label{font-size:11px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
+.stat-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1}
+.stat-sub{font-size:11px;color:var(--text2);margin-top:4px}
+.stat-card.blue .stat-val{color:var(--accent2)}
+.stat-card.green .stat-val{color:var(--green)}
+.stat-card.orange .stat-val{color:var(--orange)}
+.stat-card.purple .stat-val{color:var(--purple)}
+
+/* ── SECTION HEADER ── */
+.sec-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.sec-title{font-size:15px;font-weight:700;color:var(--text)}
+.sec-action{
+  background:none;border:1px solid var(--border);
+  border-radius:8px;padding:6px 12px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12px;color:var(--text2);cursor:pointer;
+  transition:all 0.2s;
+}
+.sec-action:hover{border-color:var(--accent);color:var(--accent2)}
+
+/* ── CARD LIST ── */
+.card-list{display:flex;flex-direction:column;gap:8px}
+
+.item-card{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:16px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.item-card:hover{border-color:var(--border);background:var(--bg3)}
+
+.item-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.item-title{font-size:14px;font-weight:600;line-height:1.3}
+.item-sub{font-size:12px;color:var(--text2);margin-top:3px}
+.badge{
+  flex-shrink:0;
+  font-size:11px;font-weight:600;
+  padding:3px 9px;border-radius:20px;
+}
+.badge.green{background:var(--green-soft);color:var(--green)}
+.badge.orange{background:var(--orange-soft);color:var(--orange)}
+.badge.red{background:var(--red-soft);color:var(--red)}
+.badge.blue{background:var(--accent-soft);color:var(--accent2)}
+.badge.purple{background:var(--purple-soft);color:var(--purple)}
+
+.item-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.meta-chip{
+  display:flex;align-items:center;gap:4px;
+  font-size:11px;color:var(--text2);
+}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap{margin-top:10px}
+.prog-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px}
+.prog-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.prog-fill.blue{background:linear-gradient(to right,var(--accent),var(--accent2))}
+.prog-fill.green{background:linear-gradient(to right,#16a34a,var(--green))}
+.prog-fill.orange{background:linear-gradient(to right,#d97706,var(--orange))}
+
+/* ── LEADERBOARD ── */
+.lb-item{
+  display:flex;align-items:center;gap:12px;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:14px;
+  margin-bottom:8px;
+  transition:all 0.2s;
+}
+.lb-item:hover{border-color:var(--border)}
+.lb-rank{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:800;
+  flex-shrink:0;
+}
+.lb-rank.r1{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#000}
+.lb-rank.r2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
+.lb-rank.r3{background:linear-gradient(135deg,#d97706,#92400e);color:#fff}
+.lb-rank.rn{background:var(--bg3);color:var(--text2)}
+.lb-info{flex:1}
+.lb-name{font-size:14px;font-weight:600}
+.lb-detail{font-size:11px;color:var(--text2);margin-top:2px}
+.lb-score{
+  font-family:'Syne',sans-serif;
+  font-size:20px;font-weight:800;color:var(--accent2);
+}
+
+/* ── ELAN ── */
+.notice-card{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-left:3px solid var(--accent);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:10px;
+}
+.notice-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.notice-title{font-size:14px;font-weight:600}
+.notice-date{font-size:11px;color:var(--text2)}
+.notice-body{font-size:13px;color:var(--text2);line-height:1.55}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(4px);
+  display:none;align-items:flex-end;justify-content:center;
+  padding:16px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px 20px 16px 16px;
+  width:100%;max-width:480px;
+  padding:24px 20px;
+  max-height:85vh;overflow-y:auto;
+  animation:slideUp 0.3s cubic-bezier(.22,.68,0,1.2) both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800}
+.modal-close{
+  background:var(--bg3);border:none;border-radius:8px;
+  width:30px;height:30px;cursor:pointer;
+  color:var(--text2);font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.modal-close:hover{background:var(--red-soft);color:var(--red)}
+
+.modal .field{margin-bottom:14px}
+.modal textarea{
+  width:100%;min-height:80px;resize:vertical;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;color:var(--text);outline:none;
+  transition:border-color 0.2s;
+}
+.modal textarea:focus{border-color:var(--accent)}
+.modal select{
+  width:100%;background:var(--bg3);
+  border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px;color:var(--text);outline:none;
+  transition:border-color 0.2s;
+}
+.modal select:focus{border-color:var(--accent)}
+.modal-footer{display:flex;gap:8px;margin-top:20px}
+.btn-sec{
+  flex:1;padding:13px;border-radius:10px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text2);cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:600;
+  transition:all 0.2s;
+}
+.btn-sec:hover{background:var(--bg3);color:var(--text)}
+
+/* ── GRADE INPUT ── */
+.grade-row{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:10px;padding:12px 14px;margin-bottom:8px;
+}
+.grade-row .name{flex:1;font-size:13px;font-weight:500}
+.grade-row input[type=number]{
+  width:64px;padding:6px 10px;text-align:center;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-size:13px;outline:none;
+}
+.grade-row input[type=number]:focus{border-color:var(--accent)}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:40px 16px;color:var(--text2)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:0.5}
+.empty-text{font-size:14px}
+
+/* ── CHART ── */
+.chart-wrap{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:20px;margin-bottom:16px;
+}
+.chart-title{font-size:13px;font-weight:600;margin-bottom:16px;color:var(--text2)}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:100px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar-fill{
+  width:100%;border-radius:6px 6px 0 0;
+  background:linear-gradient(to top,var(--accent),var(--accent2));
+  transition:height 1s cubic-bezier(.22,.68,0,1.2);
+  min-height:4px;
+}
+.bar-lbl{font-size:10px;color:var(--text2);text-align:center}
+.bar-val{font-size:11px;font-weight:700;color:var(--accent2)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:12px 20px;
+  font-size:13px;font-weight:500;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  z-index:500;
+  transition:transform 0.4s cubic-bezier(.22,.68,0,1.2),opacity 0.3s;
+  opacity:0;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.green{border-color:var(--green);color:var(--green)}
+.toast.blue{border-color:var(--accent);color:var(--accent2)}
+
+/* ── MY RESULTS TABLE ── */
+.results-table{width:100%;border-collapse:collapse}
+.results-table th{
+  font-size:11px;font-weight:600;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--text2);
+  padding:10px 12px;text-align:left;
+  border-bottom:1px solid var(--border2);
+}
+.results-table td{
+  padding:12px 12px;font-size:13px;
+  border-bottom:1px solid var(--border2);
+}
+.results-table tr:last-child td{border-bottom:none}
+.results-table tr:hover td{background:rgba(255,255,255,0.02)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.stagger>*{animation:fadeUp 0.4s ease both}
+.stagger>*:nth-child(1){animation-delay:0.05s}
+.stagger>*:nth-child(2){animation-delay:0.10s}
+.stagger>*:nth-child(3){animation-delay:0.15s}
+.stagger>*:nth-child(4){animation-delay:0.20s}
+.stagger>*:nth-child(5){animation-delay:0.25s}
+.stagger>*:nth-child(6){animation-delay:0.30s}
+</style>
 </head>
-<body class="bg-pink-50 text-gray-800 overflow-x-hidden">
-    <!-- Arxa plan qar ləçəkləri (Canvas) -->
-    <canvas id="snowCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1] opacity-70"></canvas>
+<body>
 
-    <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-red-500 rounded-2xl flex items-center justify-center text-white text-2xl">❤️</div>
-                <div>
-                    <h1 class="title-font text-3xl font-bold text-red-500 tracking-tight">Yusuf Bağırov</h1>
-                    <p class="text-xs text-pink-500 -mt-1">Sizin üçün xüsusi</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-8 text-lg">
-                <a href="#kartlar" class="hover:text-red-500 transition-colors font-medium">Qızlara Tebrik</a>
-                <a href="#elaqe" class="hover:text-red-500 transition-colors font-medium">Əlaqə</a>
-            </div>
-            
-            <div class="flex items-center gap-2 text-sm">
-                <i class="fa-solid fa-phone text-red-500"></i>
-                <span id="phone-number" class="font-medium text-red-600">+994 __ ___ __ __</span>
-            </div>
-        </div>
-    </header>
+<!-- ══════════ LOGIN ══════════ -->
+<div id="loginScreen">
+  <div class="login-logo">
+    <div class="login-logo-icon">📐</div>
+    <div class="login-logo-text">Math<span>Class</span></div>
+  </div>
 
-    <!-- Hero -->
-    <section class="hero-bg py-24 relative">
-        <div class="max-w-5xl mx-auto px-6 text-center">
-            <div class="inline-flex items-center gap-2 bg-white rounded-full px-5 py-2 mb-6 shadow">
-                <span class="text-3xl">🌹</span>
-                <span class="font-medium text-red-600">8 Mart — Beynəlxalq Qadınlar Günü</span>
-            </div>
-            
-            <h2 class="title-font text-7xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-500 leading-none mb-6">
-                Əziz Qızlarım ❤️
-            </h2>
-            
-            <p class="max-w-2xl mx-auto text-2xl text-gray-700 mb-10">
-                Sizə yalnız 8 Mart üçün yox, hər gün romantik hisslər hədiyyə edirəm.<br>
-                Aşağıdakı kartlara klikləyin — hər biri üçün xüsusi ürək açan mesaj var.
-            </p>
-            
-            <a href="#kartlar" 
-               class="inline-flex items-center gap-3 bg-red-500 hover:bg-red-600 text-white text-xl font-medium px-10 py-6 rounded-3xl transition-all shadow-xl">
-                <span>Tebrik kartlarını gör</span>
-                <i class="fa-solid fa-arrow-down text-2xl"></i>
-            </a>
-        </div>
-        
-        <!-- Dekorativ ürəklər -->
-        <div class="absolute bottom-10 left-10 text-6xl opacity-10">💕</div>
-        <div class="absolute top-20 right-20 text-7xl opacity-10 rotate-12">🌷</div>
-    </section>
+  <div class="login-card">
+    <div class="login-title">Xoş gəlmisiniz</div>
+    <div class="login-sub">Riyaziyyat sinif panelinə daxil olun</div>
 
-    <!-- Kartlar bölməsi -->
-    <section id="kartlar" class="max-w-7xl mx-auto px-6 py-20">
-        <div class="text-center mb-16">
-            <h3 class="title-font text-5xl font-semibold text-red-500 mb-3">Xüsusi qızlar üçün</h3>
-            <p class="text-xl text-gray-600 max-w-md mx-auto">
-                Hər kartda şəkil, ad və kliklənən "Tebrik oxu" düyməsi var. 
-                Telefonunuzda da mükəmməl işləyir.
-            </p>
-        </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="cards-container">
-            <!-- Kartlar JavaScript ilə doldurulacaq -->
-        </div>
-    </section>
-
-    <!-- Əlavə romantik bölmə -->
-    <section class="bg-white py-20">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <div class="text-6xl mb-8">✨</div>
-            <p class="italic text-2xl text-pink-700 leading-relaxed">
-                "Qadın — həyatın ən gözəl möcüzəsidir. <br>
-                Sən isə mənim üçün ən böyük möcüzəsən."
-            </p>
-            <p class="mt-6 text-red-400 font-medium">— Yusuf Bağırov</p>
-        </div>
-    </section>
-
-    <!-- Footer / Əlaqə -->
-    <footer id="elaqe" class="bg-red-700 text-white py-16">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <div class="flex justify-center gap-8 mb-10 text-4xl">
-                <span>❤️</span>
-                <span>🌹</span>
-                <span>💖</span>
-            </div>
-            <p class="text-3xl title-font mb-4">Yusuf Bağırov</p>
-            <p class="text-xl opacity-90 mb-8">Sizi sevirəm və həmişə yanınızda olmaq istəyirəm</p>
-            
-            <div class="flex justify-center items-center gap-3 text-lg">
-                <i class="fa-solid fa-phone"></i>
-                <span id="footer-phone" class="font-medium">+994 __ ___ __ __</span>
-            </div>
-            
-            <div class="mt-12 pt-8 border-t border-red-500/30 text-sm opacity-75">
-                Bu sayt yalnız sizin üçün hazırlanmışdır. HTML faylı kimi yadda saxlayın və qızlara göndərin.<br>
-                Tam responsive • Telefon və kompüterdə gözəl görünür
-            </div>
-        </div>
-    </footer>
-
-    <!-- Modal -->
-    <div id="modal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center z-[100] p-4">
-        <div class="modal bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl">
-            <!-- Modal content dinamik doldurulacaq -->
-            <div class="relative">
-                <button onclick="closeModal()" 
-                        class="absolute top-5 right-5 w-10 h-10 bg-white rounded-full shadow flex items-center justify-center text-2xl text-red-500 hover:bg-red-100 transition-colors z-10">
-                    ×
-                </button>
-                
-                <div id="modal-image" class="h-72 bg-cover bg-center"></div>
-                
-                <div class="p-8">
-                    <h3 id="modal-name" class="title-font text-4xl font-bold text-red-500 mb-6"></h3>
-                    
-                    <div id="modal-message" class="text-lg leading-relaxed text-gray-700 mb-10"></div>
-                    
-                    <div class="border-l-4 border-pink-300 pl-6 py-2 bg-pink-50 rounded-r-2xl">
-                        <p id="modal-spanish" class="italic text-xl text-pink-600"></p>
-                        <p id="modal-translation" class="text-sm text-pink-500 mt-2"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="role-switch">
+      <button class="role-btn active" id="roleTeacher" onclick="setRole('teacher')">👩‍🏫 Müəllim</button>
+      <button class="role-btn" id="roleStudent" onclick="setRole('student')">🎓 Şagird</button>
     </div>
 
-    <script>
-        // Tailwind script artıq yüklənib, əlavə tənzimləmə
-        function initTailwind() {
-            // Lazım deyil, amma əmin olmaq üçün
-        }
-        
-        // Kart məlumatları (burada dəyişdirə bilərsiniz)
-        const cardsData = [
-            {
-                name: "Aysel",
-                img: "https://picsum.photos/id/1005/600/800",
-                message: "Əziz Aysel,<br><br>Sənin gülümsəmən mənim bütün günümü işıqlandırır. Sən mənim üçün sadəcə bir qız deyil, həyatımın ən gözəl səbəbisən. Səni hər gün daha çox sevirəm. 8 Martın mübarək olsun, sevgilim! ❤️",
-                spanish: "Eres la luz de mi vida",
-                trans: "Sən mənim həyatımın işığısan"
-            },
-            {
-                name: "Leyla",
-                img: "https://picsum.photos/id/1011/600/800",
-                message: "Leyla, sənin incə səsin və mehriban ürəyin məni valeh edir. Səninlə keçirdiyim hər dəqiqə xatirəyə çevrilir. Sənə bütün romantik arzularımı həsr edirəm. Xoşbəxt ol, mənim gözəlim!",
-                spanish: "Mi corazón es tuyo",
-                trans: "Mənim ürəyim sənindir"
-            },
-            {
-                name: "Günəl",
-                img: "https://picsum.photos/id/133/600/800",
-                message: "Günəl, sən günəş kimi parlaq və isti qəlbli qızsan. Sənin yanında olmaq mənə ən böyük xoşbəxtlikdir. Səni sevmək — ən gözəl hissimdir. 8 Mart mübarək!",
-                spanish: "Eres mi sol",
-                trans: "Sən mənim günəşimsən"
-            },
-            {
-                name: "Sevinc",
-                img: "https://picsum.photos/id/201/600/800",
-                message: "Sevinc, adın kimi mənə sevinc bəxş edirsən. Səninlə söhbətlər, səninlə gülüşlər — mənim ən sevdiyim anlardır. Səni həmişə qorumaq və sevindirmək istəyirəm ❤️",
-                spanish: "Te quiero para siempre",
-                trans: "Səni əbədi sevirəm"
-            },
-            {
-                name: "Nərgiz",
-                img: "https://picsum.photos/id/251/600/800",
-                message: "Nərgiz, sən çiçək kimi zərif və ətirli qızsan. Sənin varlığın məni daha yaxşı insan edir. Sənə romantik axşamlar və sonsuz sevgi arzulayıram.",
-                spanish: "Eres mi flor favorita",
-                trans: "Sən mənim ən sevimli çiçəyimən"
-            },
-            {
-                name: "Zəhra",
-                img: "https://picsum.photos/id/64/600/800",
-                message: "Zəhra, sənin gözlərin ulduzlar qədər parlaqdır. Səninlə hər şey daha gözəl olur. Səni sevmək mənim ən böyük səadətimdir. Mübarək 8 Mart!",
-                spanish: "Eres mi estrella",
-                trans: "Sən mənim ulduzumsan"
-            }
-        ];
-        
-        // Kartları yarat
-        function createCards() {
-            const container = document.getElementById('cards-container');
-            container.innerHTML = '';
-            
-            cardsData.forEach((card, index) => {
-                const cardHTML = `
-                    <div class="card bg-white rounded-3xl overflow-hidden shadow-xl group">
-                        <div class="relative">
-                            <img src="${card.img}" 
-                                 class="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute top-4 right-4 bg-white/90 text-red-500 text-xs font-medium px-3 py-1 rounded-2xl backdrop-blur">
-                                8 Mart
-                            </div>
-                        </div>
-                        <div class="p-7">
-                            <h4 class="title-font text-3xl font-semibold text-gray-800 mb-6">${card.name}</h4>
-                            <button onclick="openModal(${index})" 
-                                    class="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-medium py-5 rounded-2xl text-lg transition-all flex items-center justify-center gap-2 shadow-lg">
-                                <span>Tebrik mesajını oxu</span>
-                                <i class="fa-solid fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += cardHTML;
-            });
-        }
-        
-        // Modal aç
-        let currentIndex = -1;
-        
-        function openModal(index) {
-            currentIndex = index;
-            const data = cardsData[index];
-            
-            document.getElementById('modal-image').style.backgroundImage = `url('${data.img}')`;
-            document.getElementById('modal-name').textContent = data.name;
-            document.getElementById('modal-message').innerHTML = data.message;
-            document.getElementById('modal-spanish').textContent = `"${data.spanish}"`;
-            document.getElementById('modal-translation').textContent = data.trans;
-            
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modal').classList.add('flex');
-        }
-        
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-        
-        // Qar ləçəkləri (Canvas)
-        function createSnow() {
-            const canvas = document.getElementById('snowCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            let particles = [];
-            
-            class Particle {
-                constructor() {
-                    this.reset();
-                }
-                
-                reset() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height - canvas.height;
-                    this.size = Math.random() * 18 + 12;
-                    this.speed = Math.random() * 1.8 + 1.2;
-                    this.swing = Math.random() * 1.5 + 0.5;
-                    this.swingSpeed = Math.random() * 0.03 + 0.015;
-                    this.opacity = Math.random() * 0.55 + 0.45;
-                    this.angle = Math.random() * Math.PI * 2;
-                }
-                
-                update() {
-                    this.y += this.speed;
-                    this.x += Math.sin(this.angle) * this.swing;
-                    this.angle += this.swingSpeed;
-                    
-                    if (this.y > canvas.height) {
-                        this.reset();
-                    }
-                }
-                
-                draw() {
-                    ctx.save();
-                    ctx.globalAlpha = this.opacity;
-                    ctx.fillStyle = '#f43f5e';
-                    ctx.font = `${this.size}px serif`;
-                    ctx.textAlign = 'center';
-                    ctx.fillText('❄️', this.x, this.y);
-                    ctx.restore();
-                }
-            }
-            
-            // 55 ədəd incə ləçək (abartısız)
-            for (let i = 0; i < 55; i++) {
-                particles.push(new Particle());
-            }
-            
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                for (let i = 0; i < particles.length; i++) {
-                    particles[i].update();
-                    particles[i].draw();
-                }
-                
-                requestAnimationFrame(animate);
-            }
-            
-            animate();
-        }
-        
-        // Telefon nömrəsini dəyişmək üçün
-        function setPhoneNumber(number) {
-            document.getElementById('phone-number').textContent = number;
-            document.getElementById('footer-phone').textContent = number;
-        }
-        
-        // Başlat
-        window.onload = function() {
-            createCards();
-            createSnow();
-            
-            // Nümunə nömrə (öz nömrənizi buraya yazın)
-            // setPhoneNumber("+994 50 123 45 67");
-            
-            // Escape düyməsi ilə modal bağlama
-            document.addEventListener('keydown', function(e) {
-                if (e.key === "Escape") {
-                    closeModal();
-                }
-            });
-            
-            // Modal kliklə arxa plana bağla
-            document.getElementById('modal').addEventListener('click', function(e) {
-                if (e.target === this) closeModal();
-            });
-        };
-    </script>
+    <div class="field">
+      <label>İstifadəçi adı</label>
+      <input id="loginUser" type="text" placeholder="ad.soyad" value="muellim"/>
+    </div>
+    <div class="field">
+      <label>Şifrə</label>
+      <input id="loginPass" type="password" placeholder="••••••••" value="1234"/>
+    </div>
+
+    <button class="btn-primary" onclick="doLogin()">Daxil ol →</button>
+
+    <div class="demo-hint">
+      <strong>Demo giriş məlumatları:</strong>
+      Müəllim: <code>muellim / 1234</code><br>
+      Şagird: <code>sagird / 1234</code>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">Math<span>Class</span></div>
+      <div class="topbar-badge" id="roleBadge">Müəllim</div>
+    </div>
+    <div class="topbar-right">
+      <div class="avatar" id="userAvatar">M</div>
+      <button class="logout-btn" onclick="doLogout()">Çıxış</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs" id="navTabs"></div>
+
+  <div class="main">
+
+    <!-- ── TEACHER PANELS ── -->
+
+    <!-- Dashboard -->
+    <div class="panel" id="pDash">
+      <div class="stats-grid stagger">
+        <div class="stat-card blue">
+          <div class="stat-label">Şagirdlər</div>
+          <div class="stat-val" id="statStudents">24</div>
+          <div class="stat-sub">aktiv sinif</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Orta bal</div>
+          <div class="stat-val" id="statAvg">74</div>
+          <div class="stat-sub">100 üzərindən</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-label">Tapşırıqlar</div>
+          <div class="stat-val" id="statTasks">6</div>
+          <div class="stat-sub">aktiv</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-label">Təhvil</div>
+          <div class="stat-val" id="statSubmit">89%</div>
+          <div class="stat-sub">bu həftə</div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Sinif orta balları — son 6 tapşırıq</div>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <div class="sec-head">
+        <div class="sec-title">Son elanlar</div>
+        <button class="sec-action" onclick="openModal('noticeModal')">+ Yeni elan</button>
+      </div>
+      <div id="noticeList"></div>
+    </div>
+
+    <!-- Tapşırıqlar (müəllim) -->
+    <div class="panel" id="pTasksT">
+      <div class="sec-head">
+        <div class="sec-title">Bütün tapşırıqlar</div>
+        <button class="sec-action" onclick="openModal('taskModal')">+ Əlavə et</button>
+      </div>
+      <div class="card-list stagger" id="taskListT"></div>
+    </div>
+
+    <!-- Qiymətlər (müəllim) -->
+    <div class="panel" id="pGradesT">
+      <div class="sec-head">
+        <div class="sec-title">Qiymət qoy</div>
+      </div>
+      <div id="gradeTaskSel" style="margin-bottom:14px">
+        <select class="modal select" id="gradingTask" onchange="loadGradeRows()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);outline:none">
+          <option value="">— Tapşırıq seçin —</option>
+        </select>
+      </div>
+      <div id="gradeRows"></div>
+      <button class="btn-primary" id="saveGradesBtn" style="display:none;margin-top:12px" onclick="saveGrades()">Qiymətləri Saxla</button>
+    </div>
+
+    <!-- Şagirdlər (müəllim) -->
+    <div class="panel" id="pStudents">
+      <div class="sec-head"><div class="sec-title">Sinif siyahısı</div></div>
+      <div class="card-list stagger" id="studentList"></div>
+    </div>
+
+    <!-- ── STUDENT PANELS ── -->
+
+    <!-- Şagird dashboard -->
+    <div class="panel" id="pSDash">
+      <div class="stats-grid stagger">
+        <div class="stat-card blue">
+          <div class="stat-label">Orta balım</div>
+          <div class="stat-val" id="sStatAvg">—</div>
+          <div class="stat-sub">100 üzərindən</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Reytinq</div>
+          <div class="stat-val" id="sStatRank">—</div>
+          <div class="stat-sub">sinifdə</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-label">Gözləyən</div>
+          <div class="stat-val" id="sStatPending">—</div>
+          <div class="stat-sub">tapşırıq</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-label">Tamamlanan</div>
+          <div class="stat-val" id="sStatDone">—</div>
+          <div class="stat-sub">tapşırıq</div>
+        </div>
+      </div>
+
+      <div class="sec-head"><div class="sec-title">Elanlar</div></div>
+      <div id="sNoticeList"></div>
+    </div>
+
+    <!-- Tapşırıqlarım (şagird) -->
+    <div class="panel" id="pSTasks">
+      <div class="sec-head"><div class="sec-title">Tapşırıqlarım</div></div>
+      <div class="card-list stagger" id="sTaskList"></div>
+    </div>
+
+    <!-- Nəticələrim (şagird) -->
+    <div class="panel" id="pSResults">
+      <div class="sec-head"><div class="sec-title">Qiymətlərim</div></div>
+      <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden">
+        <table class="results-table"><thead><tr>
+          <th>Tapşırıq</th><th>Bal</th><th>Status</th>
+        </tr></thead>
+        <tbody id="sResultsBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- Liderboard (şagird) -->
+    <div class="panel" id="pSLead">
+      <div class="sec-head"><div class="sec-title">🏆 Liderboard</div></div>
+      <div id="leaderboard"></div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ══ MODALS ══ -->
+<!-- Tapşırıq əlavə et -->
+<div class="modal-overlay" id="taskModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Yeni Tapşırıq</div>
+      <button class="modal-close" onclick="closeModal('taskModal')">✕</button>
+    </div>
+    <div class="field"><label>Başlıq</label><input id="tName" type="text" placeholder="Cəbr — Mövzu 4"/></div>
+    <div class="field"><label>Açıqlama</label><textarea id="tDesc" placeholder="Tapşırıq haqqında qısa məlumat..."></textarea></div>
+    <div class="field"><label>Son tarix</label><input id="tDue" type="date"/></div>
+    <div class="field"><label>Maksimum bal</label><input id="tMax" type="number" value="100" min="1" max="100"/></div>
+    <div class="modal-footer">
+      <button class="btn-sec" onclick="closeModal('taskModal')">Ləğv et</button>
+      <button class="btn-primary" onclick="addTask()">Əlavə et</button>
+    </div>
+  </div>
+</div>
+
+<!-- Elan əlavə et -->
+<div class="modal-overlay" id="noticeModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Yeni Elan</div>
+      <button class="modal-close" onclick="closeModal('noticeModal')">✕</button>
+    </div>
+    <div class="field"><label>Başlıq</label><input id="nTitle" type="text" placeholder="Elan başlığı"/></div>
+    <div class="field"><label>Mətn</label><textarea id="nBody" placeholder="Elanın məzmunu..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-sec" onclick="closeModal('noticeModal')">Ləğv et</button>
+      <button class="btn-primary" onclick="addNotice()">Yayımla</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tapşırıq detayı (şagird) -->
+<div class="modal-overlay" id="taskDetailModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="tdTitle">Tapşırıq</div>
+      <button class="modal-close" onclick="closeModal('taskDetailModal')">✕</button>
+    </div>
+    <div id="tdBody" style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px"></div>
+    <div id="tdMeta" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px"></div>
+    <div id="tdSubmitArea"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════ DATA ═══════════════════════════ */
+const STUDENTS = [
+  {id:1,name:"Aytən Quliyeva",   username:"sagird"},
+  {id:2,name:"Orxan Hüseynov",   username:"orxan"},
+  {id:3,name:"Nərmin Əliyeva",   username:"nermin"},
+  {id:4,name:"Tural Babayev",    username:"tural"},
+  {id:5,name:"Günel Məmmədova",  username:"gunel"},
+  {id:6,name:"Rauf İsmayılov",   username:"rauf"},
+  {id:7,name:"Sevinc Rzayeva",   username:"sevinc"},
+  {id:8,name:"Elnur Qəhrəmanov", username:"elnur"},
+];
+
+let tasks = [
+  {id:1,name:"Toplama və çıxma",        desc:"Tam ədədlərlə əməliyyatlar. Dərslik s.12-18",   due:"2025-04-10",max:100,created:"10 apr"},
+  {id:2,name:"Kəsrlər — Giriş",         desc:"Kəsrlərin toplanması və çıxılması mövzusu.",     due:"2025-04-17",max:100,created:"14 apr"},
+  {id:3,name:"Faizlər",                  desc:"Faiz tapşırıqları, həyati misallar daxil.",       due:"2025-04-24",max:100,created:"18 apr"},
+  {id:4,name:"Cəbr — Tənliklər",        desc:"Birməchullu tənliklərin həlli.",                  due:"2025-05-01",max:100,created:"25 apr"},
+  {id:5,name:"Həndəsə — Sahə",          desc:"Düzbucaqlı, üçbucaq sahəsinin hesablanması.",     due:"2025-05-08",max:100,created:"2 may"},
+  {id:6,name:"Statistika — Orta ədəd",  desc:"Orta hesabi, median, mod anlayışları.",           due:"2025-05-15",max:100,created:"6 may"},
+];
+let taskIdSeq = 7;
+
+/* grades[taskId][studentId] = score */
+let grades = {
+  1:{1:88,2:72,3:95,4:60,5:81,6:55,7:90,8:78},
+  2:{1:76,2:85,3:92,4:70,5:68,6:60,7:88,8:82},
+  3:{1:91,2:65,3:89,4:55,5:77,6:72,7:85,8:80},
+  4:{1:78,2:88,3:94,4:64,5:82,6:58,7:91,8:75},
+  5:{},
+  6:{},
+};
+
+/* submissions[taskId][studentId] = true/false */
+let submissions = {
+  1:{1:true,2:true,3:true,4:true,5:true,6:true,7:true,8:true},
+  2:{1:true,2:true,3:true,4:true,5:true,6:true,7:true,8:true},
+  3:{1:true,2:true,3:true,4:true,5:true,6:true,7:true,8:true},
+  4:{1:true,2:true,3:true,4:true,5:true,6:true,7:true,8:true},
+  5:{},
+  6:{},
+};
+
+let notices = [
+  {id:1,title:"Növbəti dərs — Geometriya",  body:"Cümə dərsinə dairəvə müsəlləsini oxuyun.",  date:"8 may"},
+  {id:2,title:"İmtahan tarixi açıqlandı",   body:"20 may — Yarımillik yoxlama işi. Hazır olun!", date:"6 may"},
+];
+let noticeIdSeq = 3;
+
+/* ═══════════════════════════ STATE ═══════════════════════════ */
+let currentRole = 'teacher';
+let currentUser = null;
+let currentStudentId = null;
+
+/* ═══════════════════════════ AUTH ═══════════════════════════ */
+function setRole(r){
+  currentRole = r;
+  document.getElementById('roleTeacher').classList.toggle('active', r==='teacher');
+  document.getElementById('roleStudent').classList.toggle('active', r==='student');
+  document.getElementById('loginUser').value = r==='teacher' ? 'muellim' : 'sagird';
+}
+
+function doLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  if(!u || !p){ showToast('İstifadəçi adı və şifrəni daxil edin',''); return; }
+
+  if(currentRole==='teacher'){
+    if(u==='muellim' && p==='1234'){
+      currentUser = {name:'Müəllim', initial:'M'};
+      launchApp('teacher');
+    } else { showToast('Yanlış giriş məlumatları',''); }
+  } else {
+    const s = STUDENTS.find(x=>x.username===u);
+    if(s && p==='1234'){
+      currentUser = {name:s.name, initial:s.name[0]};
+      currentStudentId = s.id;
+      launchApp('student');
+    } else { showToast('Yanlış giriş məlumatları',''); }
+  }
+}
+
+function doLogout(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  currentUser=null; currentStudentId=null;
+}
+
+/* ═══════════════════════════ LAUNCH ═══════════════════════════ */
+function launchApp(role){
+  document.getElementById('loginScreen').style.display='none';
+  const app = document.getElementById('app');
+  app.style.display='flex';
+  document.getElementById('roleBadge').textContent = role==='teacher'?'Müəllim':'Şagird';
+  document.getElementById('userAvatar').textContent = currentUser.initial;
+
+  buildNav(role);
+  if(role==='teacher') showPanel('pDash');
+  else showPanel('pSDash');
+}
+
+function buildNav(role){
+  const tabs = document.getElementById('navTabs');
+  tabs.innerHTML='';
+  const defs = role==='teacher' ? [
+    {id:'pDash',   icon:'📊', label:'Panel'},
+    {id:'pTasksT', icon:'📋', label:'Tapşırıqlar'},
+    {id:'pGradesT',icon:'✏️', label:'Qiymət'},
+    {id:'pStudents',icon:'👥',label:'Şagirdlər'},
+  ] : [
+    {id:'pSDash',   icon:'🏠', label:'Ana Səhifə'},
+    {id:'pSTasks',  icon:'📚', label:'Tapşırıqlar'},
+    {id:'pSResults',icon:'📈', label:'Qiymətlərim'},
+    {id:'pSLead',   icon:'🏆', label:'Liderboard'},
+  ];
+  defs.forEach((d,i)=>{
+    const b=document.createElement('button');
+    b.className='nav-tab'+(i===0?' active':'');
+    b.innerHTML=`${d.icon} ${d.label}`;
+    b.onclick=()=>{ switchTab(b,d.id); };
+    b.dataset.panel=d.id;
+    tabs.appendChild(b);
+  });
+}
+
+function switchTab(btn,panelId){
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  showPanel(panelId);
+}
+
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const panel = document.getElementById(id);
+  if(!panel) return;
+  panel.classList.add('active');
+  if(id==='pDash')     renderDash();
+  if(id==='pTasksT')   renderTasksT();
+  if(id==='pGradesT')  renderGradesT();
+  if(id==='pStudents') renderStudents();
+  if(id==='pSDash')    renderSDash();
+  if(id==='pSTasks')   renderSTasks();
+  if(id==='pSResults') renderSResults();
+  if(id==='pSLead')    renderLeaderboard();
+}
+
+/* ═══════════════════════════ TEACHER RENDERS ═══════════════════════════ */
+function renderDash(){
+  /* bar chart */
+  const bc = document.getElementById('barChart');
+  bc.innerHTML='';
+  const gradedTasks = tasks.filter(t=>Object.keys(grades[t.id]||{}).length>0).slice(-6);
+  gradedTasks.forEach(t=>{
+    const vals = Object.values(grades[t.id]||{});
+    const avg = vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
+    const col=document.createElement('div');
+    col.className='bar-col';
+    col.innerHTML=`<div class="bar-val">${avg}</div>
+      <div class="bar-fill" style="height:${avg}px"></div>
+      <div class="bar-lbl">${t.name.split(' ')[0]}</div>`;
+    bc.appendChild(col);
+  });
+
+  /* notices */
+  const nl = document.getElementById('noticeList');
+  nl.innerHTML = notices.length ? notices.slice().reverse().map(n=>`
+    <div class="notice-card">
+      <div class="notice-head">
+        <div class="notice-title">${n.title}</div>
+        <div class="notice-date">${n.date}</div>
+      </div>
+      <div class="notice-body">${n.body}</div>
+    </div>`).join('') : '<div class="empty"><div class="empty-icon">📢</div><div class="empty-text">Hələ elan yoxdur</div></div>';
+}
+
+function renderTasksT(){
+  const el = document.getElementById('taskListT');
+  el.innerHTML = tasks.slice().reverse().map(t=>{
+    const subs = Object.keys(submissions[t.id]||{}).length;
+    const graded = Object.keys(grades[t.id]||{}).length;
+    const vals = Object.values(grades[t.id]||{});
+    const avg = vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : null;
+    const pct = Math.round(subs/STUDENTS.length*100);
+    return `<div class="item-card">
+      <div class="item-top">
+        <div>
+          <div class="item-title">${t.name}</div>
+          <div class="item-sub">Son tarix: ${t.due}</div>
+        </div>
+        <span class="badge ${graded>0?'green':'orange'}">${graded>0?'Qiymətləndi':'Gözlənir'}</span>
+      </div>
+      <div class="item-meta">
+        <div class="meta-chip">📬 ${subs}/${STUDENTS.length} təhvil</div>
+        ${avg!==null?`<div class="meta-chip">⌀ Orta: ${avg}</div>`:''}
+      </div>
+      <div class="prog-wrap">
+        <div class="prog-label"><span>Təhvil faizi</span><span>${pct}%</span></div>
+        <div class="prog-bar"><div class="prog-fill ${pct>70?'green':'orange'}" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderGradesT(){
+  const sel = document.getElementById('gradingTask');
+  sel.innerHTML='<option value="">— Tapşırıq seçin —</option>';
+  tasks.forEach(t=>{ sel.innerHTML+=`<option value="${t.id}">${t.name}</option>`; });
+  document.getElementById('gradeRows').innerHTML='';
+  document.getElementById('saveGradesBtn').style.display='none';
+}
+
+function loadGradeRows(){
+  const tid = parseInt(document.getElementById('gradingTask').value);
+  const rows = document.getElementById('gradeRows');
+  if(!tid){ rows.innerHTML=''; document.getElementById('saveGradesBtn').style.display='none'; return; }
+  const task = tasks.find(t=>t.id===tid);
+  rows.innerHTML = STUDENTS.map(s=>{
+    const existing = (grades[tid]||{})[s.id]||'';
+    return `<div class="grade-row">
+      <div class="name">${s.name}</div>
+      <input type="number" min="0" max="${task.max}" value="${existing}" placeholder="—" id="gr_${s.id}" />
+      <span style="font-size:11px;color:var(--text2)">/ ${task.max}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('saveGradesBtn').style.display='block';
+}
+
+function saveGrades(){
+  const tid = parseInt(document.getElementById('gradingTask').value);
+  if(!tid) return;
+  if(!grades[tid]) grades[tid]={};
+  STUDENTS.forEach(s=>{
+    const inp = document.getElementById('gr_'+s.id);
+    if(inp && inp.value!=='') grades[tid][s.id]=parseInt(inp.value);
+  });
+  showToast('✓ Qiymətlər saxlanıldı','green');
+}
+
+function renderStudents(){
+  const el = document.getElementById('studentList');
+  const ranked = rankStudents();
+  el.innerHTML = ranked.map((s,i)=>{
+    const avg = studentAvg(s.id);
+    const done = countDone(s.id);
+    return `<div class="lb-item">
+      <div class="lb-rank ${i===0?'r1':i===1?'r2':i===2?'r3':'rn'}">${i+1}</div>
+      <div class="lb-info">
+        <div class="lb-name">${s.name}</div>
+        <div class="lb-detail">✅ ${done} tapşırıq tamamlandı</div>
+      </div>
+      <div class="lb-score">${avg!==null?avg:'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════ STUDENT RENDERS ═══════════════════════════ */
+function studentAvg(sid){
+  const scores=[];
+  tasks.forEach(t=>{ if((grades[t.id]||{})[sid]!==undefined) scores.push(grades[t.id][sid]); });
+  return scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null;
+}
+function countDone(sid){
+  return tasks.filter(t=>(submissions[t.id]||{})[sid]).length;
+}
+function rankStudents(){
+  return STUDENTS.slice().sort((a,b)=>{
+    const aa=studentAvg(a.id)||0, bb=studentAvg(b.id)||0; return bb-aa;
+  });
+}
+
+function renderSDash(){
+  const sid = currentStudentId;
+  const avg = studentAvg(sid);
+  const ranked = rankStudents();
+  const rank = ranked.findIndex(s=>s.id===sid)+1;
+  const done = countDone(sid);
+  const pending = tasks.filter(t=>!(submissions[t.id]||{})[sid]).length;
+
+  document.getElementById('sStatAvg').textContent = avg!==null?avg:'—';
+  document.getElementById('sStatRank').textContent = rank ? rank+'.' : '—';
+  document.getElementById('sStatPending').textContent = pending;
+  document.getElementById('sStatDone').textContent = done;
+
+  const nl = document.getElementById('sNoticeList');
+  nl.innerHTML = notices.length ? notices.slice().reverse().map(n=>`
+    <div class="notice-card">
+      <div class="notice-head"><div class="notice-title">${n.title}</div><div class="notice-date">${n.date}</div></div>
+      <div class="notice-body">${n.body}</div>
+    </div>`).join('') : '<div class="empty"><div class="empty-icon">📢</div><div class="empty-text">Elan yoxdur</div></div>';
+}
+
+function renderSTasks(){
+  const sid = currentStudentId;
+  const el = document.getElementById('sTaskList');
+  el.innerHTML = tasks.map(t=>{
+    const submitted = !!(submissions[t.id]||{})[sid];
+    const score = (grades[t.id]||{})[sid];
+    const graded = score!==undefined;
+    return `<div class="item-card" onclick="openTaskDetail(${t.id})">
+      <div class="item-top">
+        <div>
+          <div class="item-title">${t.name}</div>
+          <div class="item-sub">${t.desc}</div>
+        </div>
+        <span class="badge ${graded?'green':submitted?'blue':'orange'}">
+          ${graded?score+' bal':submitted?'Gözlənir':'Verilməyib'}
+        </span>
+      </div>
+      <div class="item-meta">
+        <div class="meta-chip">📅 Son: ${t.due}</div>
+        <div class="meta-chip">🎯 Maks: ${t.max}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSResults(){
+  const sid = currentStudentId;
+  const body = document.getElementById('sResultsBody');
+  body.innerHTML = tasks.map(t=>{
+    const score = (grades[t.id]||{})[sid];
+    const submitted = !!(submissions[t.id]||{})[sid];
+    const graded = score!==undefined;
+    const color = graded ? (score>=80?'green':score>=60?'orange':'red') : 'blue';
+    const status = graded ? `<span class="badge ${color}">${score} / ${t.max}</span>` :
+                   submitted ? `<span class="badge blue">Gözlənir</span>` :
+                   `<span class="badge orange">Verilməyib</span>`;
+    return `<tr>
+      <td style="font-weight:500">${t.name}</td>
+      <td style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:${graded?'var(--accent2)':'var(--text2)'}">
+        ${graded?score:'—'}
+      </td>
+      <td>${status}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderLeaderboard(){
+  const sid = currentStudentId;
+  const ranked = rankStudents();
+  document.getElementById('leaderboard').innerHTML = ranked.map((s,i)=>{
+    const avg = studentAvg(s.id);
+    const isMe = s.id===sid;
+    return `<div class="lb-item" style="${isMe?'border-color:var(--accent);background:var(--accent-soft)':''}">
+      <div class="lb-rank ${i===0?'r1':i===1?'r2':i===2?'r3':'rn'}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+      <div class="lb-info">
+        <div class="lb-name">${s.name}${isMe?' <span style="font-size:11px;color:var(--accent2)">(Sən)</span>':''}</div>
+        <div class="lb-detail">${countDone(s.id)} tapşırıq tamamlandı</div>
+      </div>
+      <div class="lb-score">${avg!==null?avg:'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════ ACTIONS ═══════════════════════════ */
+function addTask(){
+  const name=document.getElementById('tName').value.trim();
+  const desc=document.getElementById('tDesc').value.trim();
+  const due=document.getElementById('tDue').value;
+  const max=parseInt(document.getElementById('tMax').value)||100;
+  if(!name||!due){ showToast('Ad və tarixi doldurun',''); return; }
+  const id=taskIdSeq++;
+  tasks.push({id,name,desc,due,max,created:'indi'});
+  grades[id]={};
+  submissions[id]={};
+  closeModal('taskModal');
+  renderTasksT();
+  showToast('✓ Tapşırıq əlavə edildi','green');
+  document.getElementById('tName').value='';
+  document.getElementById('tDesc').value='';
+  document.getElementById('tDue').value='';
+}
+
+function addNotice(){
+  const t=document.getElementById('nTitle').value.trim();
+  const b=document.getElementById('nBody').value.trim();
+  if(!t||!b){ showToast('Başlıq və mətni doldurun',''); return; }
+  const today=new Date();
+  const dateStr=today.getDate()+' '+['yan','fev','mar','apr','may','iyn','iyl','avq','sen','okt','noy','dek'][today.getMonth()];
+  notices.push({id:noticeIdSeq++,title:t,body:b,date:dateStr});
+  closeModal('noticeModal');
+  renderDash();
+  showToast('✓ Elan yayımlandı','green');
+  document.getElementById('nTitle').value='';
+  document.getElementById('nBody').value='';
+}
+
+function openTaskDetail(tid){
+  const t=tasks.find(x=>x.id===tid);
+  const sid=currentStudentId;
+  const submitted=!!(submissions[t.id]||{})[sid];
+  const score=(grades[t.id]||{})[sid];
+  document.getElementById('tdTitle').textContent=t.name;
+  document.getElementById('tdBody').textContent=t.desc||'Açıqlama yoxdur.';
+  document.getElementById('tdMeta').innerHTML=`
+    <span class="badge blue">📅 ${t.due}</span>
+    <span class="badge purple">🎯 Maks ${t.max} bal</span>`;
+  const area=document.getElementById('tdSubmitArea');
+  if(score!==undefined){
+    area.innerHTML=`<div class="stat-card green" style="text-align:center"><div class="stat-label">Qiymətiniz</div><div class="stat-val">${score}</div><div class="stat-sub">/ ${t.max} bal</div></div>`;
+  } else if(submitted){
+    area.innerHTML=`<div class="notice-card" style="text-align:center;border-left-color:var(--accent2)"><div style="font-size:13px;color:var(--accent2)">✅ Təhvil verildi — qiymət gözlənilir</div></div>`;
+  } else {
+    area.innerHTML=`<button class="btn-primary" onclick="submitTask(${tid})">Təhvil Ver →</button>`;
+  }
+  openModal('taskDetailModal');
+}
+
+function submitTask(tid){
+  if(!submissions[tid]) submissions[tid]={};
+  submissions[tid][currentStudentId]=true;
+  closeModal('taskDetailModal');
+  renderSTasks();
+  showToast('✓ Tapşırıq təhvil verildi','green');
+}
+
+/* ═══════════════════════════ UTILS ═══════════════════════════ */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+let toastTimer;
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast'+(type?' '+type:'');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* close modals on overlay click */
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); });
+});
+</script>
 </body>
 </html>
