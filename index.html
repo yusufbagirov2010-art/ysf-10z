@@ -1,1 +1,1290 @@
 
+<!DOCTYPE html>
+<html lang="az" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QARA ÇİÇƏK — Film</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Playfair Display', 'serif'],
+                        body: ['Inter', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        dark: { 50: '#111111', 100: '#0a0a0a', 200: '#050505', 300: '#000000' },
+                        accent: { DEFAULT: '#8B0000', light: '#B22222', dark: '#5C0000' },
+                        gold: { DEFAULT: '#C9A96E', light: '#D4B87A', dark: '#A68B5B' },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; overflow-x: hidden; }
+        ::selection { background: #8B0000; color: #fff; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        .hero-overlay {
+            background: linear-gradient(to bottom, 
+                rgba(0,0,0,0.3) 0%, 
+                rgba(0,0,0,0.1) 30%, 
+                rgba(0,0,0,0.5) 60%, 
+                rgba(0,0,0,0.95) 85%, 
+                #000 100%);
+        }
+
+        .hero-side-overlay {
+            background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 50%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #C9A96E 0%, #E8D5B0 40%, #C9A96E 60%, #A68B5B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-gradient-red {
+            background: linear-gradient(135deg, #B22222 0%, #8B0000 50%, #5C0000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-glow:hover {
+            box-shadow: 0 0 40px rgba(139, 0, 0, 0.15), 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .line-anim {
+            width: 0;
+            transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .line-anim.active { width: 100%; }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .scale-in.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .parallax-slow { transition: transform 0.1s linear; }
+
+        .gallery-item {
+            overflow: hidden;
+            position: relative;
+        }
+        .gallery-item img {
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.7s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        .gallery-item:hover::after { opacity: 1; }
+
+        .rating-star { color: #333; transition: color 0.3s ease; }
+        .rating-star.filled { color: #C9A96E; }
+
+        .cast-card { perspective: 1000px; }
+        .cast-card-inner {
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
+        }
+        .cast-card:hover .cast-card-inner {
+            transform: rotateY(180deg);
+        }
+        .cast-card-front, .cast-card-back {
+            backface-visibility: hidden;
+        }
+        .cast-card-back {
+            transform: rotateY(180deg);
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes grain {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -10%); }
+            30% { transform: translate(3%, -15%); }
+            50% { transform: translate(12%, 9%); }
+            70% { transform: translate(9%, 4%); }
+            90% { transform: translate(-1%, 7%); }
+        }
+        .grain::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            animation: grain 8s steps(10) infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .nav-blur {
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #B22222 0%, #8B0000 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .btn-primary:hover::before { opacity: 1; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(139,0,0,0.4); }
+
+        .btn-outline {
+            border: 1px solid rgba(201,169,110,0.4);
+            transition: all 0.4s ease;
+        }
+        .btn-outline:hover {
+            border-color: #C9A96E;
+            background: rgba(201,169,110,0.08);
+            transform: translateY(-2px);
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(201,169,110,0.2), transparent);
+        }
+
+        .quote-mark {
+            font-family: 'Playfair Display', serif;
+            font-size: 120px;
+            line-height: 1;
+            color: rgba(139,0,0,0.15);
+        }
+
+        .timeline-line {
+            background: linear-gradient(to bottom, transparent, rgba(201,169,110,0.3), rgba(201,169,110,0.3), transparent);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .toast {
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #C9A96E;
+            animation: typewriter 3s steps(40) 1s forwards, blink 0.8s step-end infinite;
+            width: 0;
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .soundwave span {
+            display: inline-block;
+            width: 3px;
+            background: #8B0000;
+            margin: 0 1px;
+            border-radius: 2px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        .soundwave span:nth-child(2) { animation-delay: 0.1s; }
+        .soundwave span:nth-child(3) { animation-delay: 0.2s; }
+        .soundwave span:nth-child(4) { animation-delay: 0.3s; }
+        .soundwave span:nth-child(5) { animation-delay: 0.4s; }
+        .soundwave span:nth-child(6) { animation-delay: 0.3s; }
+        .soundwave span:nth-child(7) { animation-delay: 0.2s; }
+        @keyframes wave {
+            0%, 100% { height: 8px; }
+            50% { height: 24px; }
+        }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(to right, #8B0000, #C9A96E);
+            z-index: 9999;
+            transition: width 0.1s linear;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-black/60" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center group-hover:border-gold transition-colors duration-300">
+                    <div class="w-2 h-2 rounded-full bg-accent"></div>
+                </div>
+                <span class="font-display text-lg tracking-wide">QARA ÇİÇƏK</span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#synopsis" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300 tracking-wide">Süjet</a>
+                <a href="#cast" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300 tracking-wide">Aktyorlar</a>
+                <a href="#gallery" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300 tracking-wide">Qalereya</a>
+                <a href="#reviews" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300 tracking-wide">Rəylər</a>
+                <a href="#premiere" class="text-sm text-zinc-400 hover:text-white transition-colors duration-300 tracking-wide">Premyera</a>
+            </div>
+
+            <div class="hidden md:flex items-center gap-4">
+                <button onclick="playTrailer()" class="flex items-center gap-2 text-sm text-zinc-400 hover:text-gold transition-colors duration-300">
+                    <i data-lucide="play" class="w-4 h-4"></i>
+                    Treyler
+                </button>
+                <a href="#premiere" class="btn-primary px-5 py-2 rounded-full text-sm font-medium relative z-10">
+                    <span class="relative z-10">Bilet Al</span>
+                </a>
+            </div>
+
+            <button class="md:hidden text-white" onclick="toggleMobile()">
+                <i data-lucide="menu" class="w-6 h-6" id="menuIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed inset-0 z-40 bg-black/95 nav-blur flex flex-col items-center justify-center gap-8" id="mobileMenu">
+        <a href="#synopsis" onclick="toggleMobile()" class="text-2xl font-display text-zinc-300 hover:text-white transition-colors">Süjet</a>
+        <a href="#cast" onclick="toggleMobile()" class="text-2xl font-display text-zinc-300 hover:text-white transition-colors">Aktyorlar</a>
+        <a href="#gallery" onclick="toggleMobile()" class="text-2xl font-display text-zinc-300 hover:text-white transition-colors">Qalereya</a>
+        <a href="#reviews" onclick="toggleMobile()" class="text-2xl font-display text-zinc-300 hover:text-white transition-colors">Rəylər</a>
+        <a href="#premiere" onclick="toggleMobile()" class="text-2xl font-display text-zinc-300 hover:text-white transition-colors">Premyera</a>
+        <div class="section-divider w-24 my-4"></div>
+        <button onclick="playTrailer(); toggleMobile();" class="btn-primary px-8 py-3 rounded-full text-sm font-medium relative z-10">
+            <span class="relative z-10 flex items-center gap-2"><i data-lucide="play" class="w-4 h-4"></i> Treyleri İzlə</span>
+        </button>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative min-h-screen flex items-end overflow-hidden grain">
+        <div class="absolute inset-0">
+            <img src="https://picsum.photos/seed/blackflower-hero/1920/1080.jpg" 
+                 alt="Qara Çiçək Film" 
+                 class="w-full h-full object-cover scale-105"
+                 id="heroImage">
+        </div>
+        <div class="absolute inset-0 hero-overlay"></div>
+        <div class="absolute inset-0 hero-side-overlay"></div>
+
+        <!-- Floating particles -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <div class="absolute top-1/4 right-1/4 w-1 h-1 bg-gold/30 rounded-full float" style="animation-delay: 0s;"></div>
+            <div class="absolute top-1/3 right-1/3 w-0.5 h-0.5 bg-accent/40 rounded-full float" style="animation-delay: 1s;"></div>
+            <div class="absolute top-2/4 right-1/5 w-1 h-1 bg-gold/20 rounded-full float" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/5 right-2/5 w-0.5 h-0.5 bg-white/10 rounded-full float" style="animation-delay: 3s;"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 pb-20 md:pb-28 w-full">
+            <div class="max-w-3xl">
+                <!-- Top badges -->
+                <div class="flex items-center gap-3 mb-6 fade-up" style="transition-delay: 0.2s;">
+                    <span class="px-3 py-1 rounded-full border border-gold/30 text-gold text-xs font-mono tracking-wider">2025</span>
+                    <span class="px-3 py-1 rounded-full border border-accent/40 text-accent-light text-xs font-mono tracking-wider">PSİXOLOJİ TRİLLER</span>
+                    <span class="px-3 py-1 rounded-full border border-zinc-700 text-zinc-400 text-xs font-mono tracking-wider">18+</span>
+                </div>
+
+                <!-- Title -->
+                <h1 class="font-display text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-none mb-2 fade-up" style="transition-delay: 0.4s;">
+                    <span class="text-gradient">QARA</span>
+                </h1>
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-none mb-8 fade-up" style="transition-delay: 0.5s;">
+                    <span class="text-white/90">ÇİÇƏK</span>
+                </h1>
+
+                <!-- Tagline -->
+                <p class="font-display italic text-xl md:text-2xl text-zinc-400 mb-8 fade-up" style="transition-delay: 0.6s;">
+                    "Qaranlıqda açan çiçək, ən dəhşətli gözəllikdir."
+                </p>
+
+                <!-- Film meta -->
+                <div class="flex flex-wrap items-center gap-6 text-sm text-zinc-500 mb-10 fade-up" style="transition-delay: 0.7s;">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4"></i>
+                        <span>2 saat 18 dəqiqə</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                        <span>31 Oktyabr 2025</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="globe" class="w-4 h-4"></i>
+                        <span>Azərbaycan / Türkiyə</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="film" class="w-4 h-4"></i>
+                        <span>Rəqəmsal / IMAX</span>
+                    </div>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-wrap items-center gap-4 fade-up" style="transition-delay: 0.8s;">
+                    <button onclick="playTrailer()" class="btn-primary px-8 py-4 rounded-full text-base font-medium flex items-center gap-3 relative z-10 group">
+                        <span class="relative z-10 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+                            </div>
+                            Treyleri İzlə
+                        </span>
+                    </button>
+                    <a href="#premiere" class="btn-outline px-8 py-4 rounded-full text-base font-medium flex items-center gap-3">
+                        <i data-lucide="ticket" class="w-5 h-5 text-gold"></i>
+                        Bilet Al
+                    </a>
+                </div>
+            </div>
+
+            <!-- Scroll indicator -->
+            <div class="absolute bottom-8 right-6 md:right-12 flex flex-col items-center gap-2 fade-up" style="transition-delay: 1.2s;">
+                <span class="text-xs text-zinc-600 tracking-widest uppercase" style="writing-mode: vertical-rl;">Scroll</span>
+                <div class="w-px h-12 bg-gradient-to-b from-zinc-600 to-transparent pulse-slow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SYNOPSIS SECTION -->
+    <section id="synopsis" class="relative py-24 md:py-32 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <!-- Section header -->
+            <div class="max-w-3xl mx-auto text-center mb-20">
+                <span class="font-mono text-xs text-gold tracking-[0.3em] uppercase fade-up">Filmin Haqqında</span>
+                <h2 class="font-display text-4xl md:text-5xl font-semibold mt-4 mb-6 fade-up" style="transition-delay: 0.1s;">
+                    Süjet
+                </h2>
+                <div class="section-divider w-24 mx-auto fade-up" style="transition-delay: 0.2s;"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Left: Text -->
+                <div class="fade-left">
+                    <div class="relative">
+                        <span class="quote-mark absolute -top-8 -left-4">"</span>
+                        <p class="text-lg md:text-xl text-zinc-300 leading-relaxed mb-8 relative z-10">
+                            Bitki alimi <span class="text-gold font-medium">Dr. Ləman Qasımova</span>, İçərişəhərin dərinliklərində antik bir quyuda tapılan naməlum bitki növünü öyrənməyə başlayır. Bu çiçək heç bir mənbədə qeyd olunmayıb — tam qaranlıqda inkişaf edir, insanı yuxu vəziyyətinə salır və yuxuda dərin basqınlar yaradır.
+                        </p>
+                        <p class="text-lg md:text-xl text-zinc-400 leading-relaxed mb-8 relative z-10">
+                            Ləman tədqiqatını dərinləşdikcə, quyunun ətrafında yaşayan insanların yoxa çıxdığını kəşf edir. Hər itkini izləyən qaranlıq izlər onu öz keçmişinə — uşaqlıqda itirdiyi bacısının yoxa çıxmasına — aparır. 
+                        </p>
+                        <p class="text-lg md:text-xl text-zinc-400 leading-relaxed relative z-10">
+                            <span class="text-accent-light font-medium">Qara Çiçək</span> sadəcə bir bitki deyil. O, yaddaşları yeyən, qaranlıqda yaşayan və insanın ən dərin qorxularını reallığa çevirən bir varlıqdır. Və o, artıq oyanıb.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right: Key facts card -->
+                <div class="fade-right">
+                    <div class="bg-zinc-950 border border-zinc-800/50 rounded-2xl p-8 md:p-10 card-glow transition-all duration-500">
+                        <h3 class="font-display text-xl mb-8 text-gold">Film Haqqında Məlumat</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex justify-between items-start pb-6 border-b border-zinc-800/50">
+                                <span class="text-zinc-500 text-sm">Rejissor</span>
+                                <span class="text-white font-medium text-right">Orxan Əlizadə</span>
+                            </div>
+                            <div class="flex justify-between items-start pb-6 border-b border-zinc-800/50">
+                                <span class="text-zinc-500 text-sm">Ssenari</span>
+                                <span class="text-white font-medium text-right">Günel Əliyeva<br>Orxan Əlizadə</span>
+                            </div>
+                            <div class="flex justify-between items-start pb-6 border-b border-zinc-800/50">
+                                <span class="text-zinc-500 text-sm">Prodüser</span>
+                                <span class="text-white font-medium text-right">Rəşad Əliyev<br>Selin Demir</span>
+                            </div>
+                            <div class="flex justify-between items-start pb-6 border-b border-zinc-800/50">
+                                <span class="text-zinc-500 text-sm">Operator</span>
+                                <span class="text-white font-medium text-right">Emil Cəfərov</span>
+                            </div>
+                            <div class="flex justify-between items-start pb-6 border-b border-zinc-800/50">
+                                <span class="text-zinc-500 text-sm">Bəstəkar</span>
+                                <span class="text-white font-medium text-right">Fərhad Bədirxanov</span>
+                            </div>
+                            <div class="flex justify-between items-start pb-6 border-b border-zinc-800/50">
+                                <span class="text-zinc-500 text-sm">Janr</span>
+                                <span class="text-white font-medium text-right">Psixoloji Triller / Misteriya</span>
+                            </div>
+                            <div class="flex justify-between items-start pb-6 border-b border-zinc-800/50">
+                                <span class="text-zinc-500 text-sm">Ölkə</span>
+                                <span class="text-white font-medium text-right">Azərbaycan, Türkiyə</span>
+                            </div>
+                            <div class="flex justify-between items-start pb-6 border-b border-zinc-800/50">
+                                <span class="text-zinc-500 text-sm">Dil</span>
+                                <span class="text-white font-medium text-right">Azərbaycanca, Türkcə</span>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <span class="text-zinc-500 text-sm">Büdcə</span>
+                                <span class="text-white font-medium text-right font-mono">$2.8M</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- CAST SECTION -->
+    <section id="cast" class="relative py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center mb-20">
+                <span class="font-mono text-xs text-gold tracking-[0.3em] uppercase fade-up">Aktyor Heyəti</span>
+                <h2 class="font-display text-4xl md:text-5xl font-semibold mt-4 mb-6 fade-up" style="transition-delay: 0.1s;">
+                    Rollarda
+                </h2>
+                <div class="section-divider w-24 mx-auto fade-up" style="transition-delay: 0.2s;"></div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                <!-- Cast 1 -->
+                <div class="cast-card h-80 md:h-96 scale-in" style="transition-delay: 0.1s;">
+                    <div class="cast-card-inner relative w-full h-full">
+                        <div class="cast-card-front absolute inset-0 rounded-2xl overflow-hidden">
+                            <img src="https://picsum.photos/seed/actress-leman/400/600.jpg" alt="Ləman Qasımova" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-5">
+                                <h4 class="font-display text-lg font-semibold">Ləman Qasımova</h4>
+                                <p class="text-gold text-sm">Dr. Ləman</p>
+                            </div>
+                        </div>
+                        <div class="cast-card-back absolute inset-0 rounded-2xl bg-zinc-950 border border-zinc-800/50 p-6 flex flex-col justify-center">
+                            <span class="text-gold font-mono text-xs tracking-wider mb-3">BAŞ ROL</span>
+                            <h4 class="font-display text-xl font-semibold mb-4">Ləman Qasımova</h4>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Bitki alimi. İti zəkalı, lakin keçmişinin kölgəsi altında yaşayan qadın. Qaranlıq quyudakı kəşfi onu məhvə aparacaq.</p>
+                            <div class="mt-4 flex gap-2">
+                                <span class="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-400">3 mükafat</span>
+                                <span class="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-400">12 film</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cast 2 -->
+                <div class="cast-card h-80 md:h-96 scale-in" style="transition-delay: 0.2s;">
+                    <div class="cast-card-inner relative w-full h-full">
+                        <div class="cast-card-front absolute inset-0 rounded-2xl overflow-hidden">
+                            <img src="https://picsum.photos/seed/actor-emil/400/600.jpg" alt="Elvin Muradov" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-5">
+                                <h4 class="font-display text-lg font-semibold">Elvin Muradov</h4>
+                                <p class="text-gold text-sm">Detektiv Kərim</p>
+                            </div>
+                        </div>
+                        <div class="cast-card-back absolute inset-0 rounded-2xl bg-zinc-950 border border-zinc-800/50 p-6 flex flex-col justify-center">
+                            <span class="text-gold font-mono text-xs tracking-wider mb-3">ƏSAS ROL</span>
+                            <h4 class="font-display text-xl font-semibold mb-4">Elvin Muradov</h4>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Təcrübəli detektiv. İtkin hadisələri araşdırarkən Ləmanla yolları kəsişir. Amma o da çiçəyin təsiri altındadır.</p>
+                            <div class="mt-4 flex gap-2">
+                                <span class="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-400">5 mükafat</span>
+                                <span class="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-400">21 film</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cast 3 -->
+                <div class="cast-card h-80 md:h-96 scale-in" style="transition-delay: 0.3s;">
+                    <div class="cast-card-inner relative w-full h-full">
+                        <div class="cast-card-front absolute inset-0 rounded-2xl overflow-hidden">
+                            <img src="https://picsum.photos/seed/actress-sevil/400/600.jpg" alt="Sevinc Nəsirova" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-5">
+                                <h4 class="font-display text-lg font-semibold">Sevinc Nəsirova</h4>
+                                <p class="text-gold text-sm">Günay (bacı)</p>
+                            </div>
+                        </div>
+                        <div class="cast-card-back absolute inset-0 rounded-2xl bg-zinc-950 border border-zinc-800/50 p-6 flex flex-col justify-center">
+                            <span class="text-gold font-mono text-xs tracking-wider mb-3">ƏSAS ROL</span>
+                            <h4 class="font-display text-xl font-semibold mb-4">Sevinc Nəsirova</h4>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Ləmanın itkin bacısı. Yuxuların və xəyalların sərhədində yaşayan misteriya fiqur. Həqiqətən o, kimdir?</p>
+                            <div class="mt-4 flex gap-2">
+                                <span class="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-400">2 mükafat</span>
+                                <span class="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-400">8 film</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cast 4 -->
+                <div class="cast-card h-80 md:h-96 scale-in" style="transition-delay: 0.4s;">
+                    <div class="cast-card-inner relative w-full h-full">
+                        <div class="cast-card-front absolute inset-0 rounded-2xl overflow-hidden">
+                            <img src="https://picsum.photos/seed/actor-rashad/400/600.jpg" alt="Rəşad Hüseynov" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 right-0 p-5">
+                                <h4 class="font-display text-lg font-semibold">Rəşad Hüseynov</h4>
+                                <p class="text-gold text-sm">Prof. Əsgərov</p>
+                            </div>
+                        </div>
+                        <div class="cast-card-back absolute inset-0 rounded-2xl bg-zinc-950 border border-zinc-800/50 p-6 flex flex-col justify-center">
+                            <span class="text-gold font-mono text-xs tracking-wider mb-3">DƏSTƏKÇİ ROL</span>
+                            <h4 class="font-display text-xl font-semibold mb-4">Rəşad Hüseynov</h4>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Ləmanın müəllimi. Qaranlıq biliklərə sahib olan, sirli keçmişi olan professor. Hər kəsdən daha çox şey bilir.</p>
+                            <div class="mt-4 flex gap-2">
+                                <span class="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-400">7 mükafat</span>
+                                <span class="px-2 py-1 bg-zinc-800/50 rounded text-xs text-zinc-400">35 film</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- GALLERY SECTION -->
+    <section id="gallery" class="relative py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center mb-20">
+                <span class="font-mono text-xs text-gold tracking-[0.3em] uppercase fade-up">Kadrlar</span>
+                <h2 class="font-display text-4xl md:text-5xl font-semibold mt-4 mb-6 fade-up" style="transition-delay: 0.1s;">
+                    Qalereya
+                </h2>
+                <div class="section-divider w-24 mx-auto fade-up" style="transition-delay: 0.2s;"></div>
+            </div>
+
+            <!-- Masonry-like gallery -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                <div class="gallery-item rounded-2xl scale-in row-span-2" style="transition-delay: 0.1s;">
+                    <img src="https://picsum.photos/seed/qflower-scene1/600/900.jpg" alt="Səhnə 1" class="w-full h-full object-cover rounded-2xl">
+                    <div class="absolute bottom-4 left-4 z-10 opacity-0 gallery-label transition-opacity duration-500">
+                        <span class="text-xs font-mono text-gold tracking-wider">Bakı, İçərişəhər — Gecə</span>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-2xl scale-in" style="transition-delay: 0.2s;">
+                    <img src="https://picsum.photos/seed/qflower-scene2/600/450.jpg" alt="Səhnə 2" class="w-full h-full object-cover rounded-2xl">
+                </div>
+                <div class="gallery-item rounded-2xl scale-in" style="transition-delay: 0.3s;">
+                    <img src="https://picsum.photos/seed/qflower-scene3/600/450.jpg" alt="Səhnə 3" class="w-full h-full object-cover rounded-2xl">
+                </div>
+                <div class="gallery-item rounded-2xl scale-in" style="transition-delay: 0.4s;">
+                    <img src="https://picsum.photos/seed/qflower-scene4/600/450.jpg" alt="Səhnə 4" class="w-full h-full object-cover rounded-2xl">
+                </div>
+                <div class="gallery-item rounded-2xl scale-in" style="transition-delay: 0.5s;">
+                    <img src="https://picsum.photos/seed/qflower-scene5/600/450.jpg" alt="Səhnə 5" class="w-full h-full object-cover rounded-2xl">
+                </div>
+                <div class="gallery-item rounded-2xl col-span-2 md:col-span-1 scale-in" style="transition-delay: 0.6s;">
+                    <img src="https://picsum.photos/seed/qflower-scene6/600/450.jpg" alt="Səhnə 6" class="w-full h-full object-cover rounded-2xl">
+                </div>
+            </div>
+
+            <!-- Gallery hover label fix -->
+            <style>.gallery-item:hover .gallery-label { opacity: 1 !important; }</style>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- SOUNDTRACK / ATMOSPHERE SECTION -->
+    <section class="relative py-24 md:py-32 overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://picsum.photos/seed/qflower-dark/1920/800.jpg" alt="" class="w-full h-full object-cover opacity-20">
+            <div class="absolute inset-0 bg-black/80"></div>
+        </div>
+        
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <span class="font-mono text-xs text-gold tracking-[0.3em] uppercase fade-up">Musiqi & Atmosfer</span>
+                <h2 class="font-display text-4xl md:text-5xl font-semibold mt-4 mb-6 fade-up" style="transition-delay: 0.1s;">
+                    Səs Dünyası
+                </h2>
+                <div class="section-divider w-24 mx-auto fade-up" style="transition-delay: 0.2s;"></div>
+            </div>
+
+            <div class="bg-zinc-950/80 border border-zinc-800/50 rounded-3xl p-8 md:p-12 backdrop-blur-sm fade-up" style="transition-delay: 0.3s;">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <!-- Album art -->
+                    <div class="w-48 h-48 md:w-56 md:h-56 rounded-2xl overflow-hidden flex-shrink-0 relative group">
+                        <img src="https://picsum.photos/seed/qflower-soundtrack/400/400.jpg" alt="Soundtrack" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center">
+                                <i data-lucide="play" class="w-7 h-7 ml-1 text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Track info -->
+                    <div class="flex-1 text-center md:text-left">
+                        <span class="font-mono text-xs text-zinc-500 tracking-wider">ORIGINAL SOUNDTRACK</span>
+                        <h3 class="font-display text-2xl md:text-3xl font-semibold mt-2 mb-1">Qaranlıqdan Gələn Səslər</h3>
+                        <p class="text-zinc-400 text-sm mb-6">Fərhad Bədirxanov · 2025</p>
+
+                        <!-- Fake player -->
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs text-zinc-500 font-mono w-8">01</span>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Quyunun Ağzı</span>
+                                        <span class="text-zinc-500 font-mono">4:32</span>
+                                    </div>
+                                    <div class="h-0.5 bg-zinc-800 rounded-full">
+                                        <div class="h-full bg-accent rounded-full" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs text-zinc-500 font-mono w-8">02</span>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Qara Çiçəyin Oyanışı</span>
+                                        <span class="text-zinc-500 font-mono">6:18</span>
+                                    </div>
+                                    <div class="h-0.5 bg-zinc-800 rounded-full">
+                                        <div class="h-full bg-gold/60 rounded-full" style="width: 45%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs text-zinc-500 font-mono w-8">03</span>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Yuxu Basqını</span>
+                                        <span class="text-zinc-500 font-mono">5:47</span>
+                                    </div>
+                                    <div class="h-0.5 bg-zinc-800 rounded-full">
+                                        <div class="h-full bg-accent/40 rounded-full" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs text-zinc-500 font-mono w-8">04</span>
+                                <div class="flex-1">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Günayın Son Nəfəsi</span>
+                                        <span class="text-zinc-500 font-mono">7:03</span>
+                                    </div>
+                                    <div class="h-0.5 bg-zinc-800 rounded-full">
+                                        <div class="h-full bg-gold/40 rounded-full" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Soundwave visualization -->
+                        <div class="flex items-end justify-center md:justify-start h-8 mt-6 gap-0.5">
+                            <div class="soundwave">
+                                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                            <span class="text-xs text-zinc-600 ml-3 font-mono">2:52 / 6:18</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- REVIEWS SECTION -->
+    <section id="reviews" class="relative py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center mb-20">
+                <span class="font-mono text-xs text-gold tracking-[0.3em] uppercase fade-up">Tənqidçilərin Rəyi</span>
+                <h2 class="font-display text-4xl md:text-5xl font-semibold mt-4 mb-6 fade-up" style="transition-delay: 0.1s;">
+                    Rəylər
+                </h2>
+                <div class="section-divider w-24 mx-auto fade-up" style="transition-delay: 0.2s;"></div>
+            </div>
+
+            <!-- Rating overview -->
+            <div class="flex flex-col items-center mb-16 fade-up" style="transition-delay: 0.3s;">
+                <div class="font-mono text-7xl text-gradient font-bold mb-2">8.7</div>
+                <div class="flex gap-1 mb-3">
+                    <i data-lucide="star" class="w-5 h-5 rating-star filled fill-current"></i>
+                    <i data-lucide="star" class="w-5 h-5 rating-star filled fill-current"></i>
+                    <i data-lucide="star" class="w-5 h-5 rating-star filled fill-current"></i>
+                    <i data-lucide="star" class="w-5 h-5 rating-star filled fill-current"></i>
+                    <i data-lucide="star" class="w-5 h-5 rating-star text-gold/40"></i>
+                </div>
+                <p class="text-zinc-500 text-sm">2,847 rəy əsasında</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-zinc-950 border border-zinc-800/50 rounded-2xl p-8 card-glow transition-all duration-500 fade-up" style="transition-delay: 0.2s;">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                    </div>
+                    <p class="text-zinc-300 leading-relaxed mb-6 italic">
+                        "Azərbaycan kinosu üçün tamamilə yeni bir səviyyə. Əlizadənin vizual dili təkcə qorxu deyil, poetik dərinlik yaradır. Ləman Qasımovanın ifası ilə film ekranı özünə vurur."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
+                            <span class="text-sm font-medium text-gold">VK</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium">Variety Kinobox</p>
+                            <p class="text-xs text-zinc-500">İstanbul Film Festivalı</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="bg-zinc-950 border border-zinc-800/50 rounded-2xl p-8 card-glow transition-all duration-500 fade-up" style="transition-delay: 0.3s;">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star text-gold/40"></i>
+                    </div>
+                    <p class="text-zinc-300 leading-relaxed mb-6 italic">
+                        "Qara Çiçək təkcə triller deyil — yaddaş, itki və identiklik haqqında dərin fəlsəfi araşdırma. Bədirxanovun musiqisi filmin ayrılmaz hissəsinə çevrilib."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
+                            <span class="text-sm font-medium text-gold">TF</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium">The Film Stage</p>
+                            <p class="text-xs text-zinc-500">Tənqidçi: Mətin Arslan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="bg-zinc-950 border border-zinc-800/50 rounded-2xl p-8 card-glow transition-all duration-500 fade-up" style="transition-delay: 0.4s;">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 rating-star filled fill-current"></i>
+                    </div>
+                    <p class="text-zinc-300 leading-relaxed mb-6 italic">
+                        "Bu il gördüyüm ən yaxşı filmlərdən biri. İçərişəhərin labirintlərində keçən səhnələri çətin unudursan. Final — tamamilə gözlənilməz və dağıdıcı."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
+                            <span class="text-sm font-medium text-gold">SB</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium">Screen Buzz</p>
+                            <p class="text-xs text-zinc-500">Tənqidçi: Anna Korçinskaya</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Festival badges -->
+            <div class="flex flex-wrap justify-center gap-6 mt-16 fade-up" style="transition-delay: 0.5s;">
+                <div class="flex items-center gap-3 px-5 py-3 rounded-full border border-zinc-800/50 bg-zinc-950/50">
+                    <i data-lucide="award" class="w-5 h-5 text-gold"></i>
+                    <span class="text-sm text-zinc-400">İstanbul FF — <span class="text-gold">Ən Yaxşı Film</span></span>
+                </div>
+                <div class="flex items-center gap-3 px-5 py-3 rounded-full border border-zinc-800/50 bg-zinc-950/50">
+                    <i data-lucide="award" class="w-5 h-5 text-gold"></i>
+                    <span class="text-sm text-zinc-400">Berlin — <span class="text-gold">Nomine</span></span>
+                </div>
+                <div class="flex items-center gap-3 px-5 py-3 rounded-full border border-zinc-800/50 bg-zinc-950/50">
+                    <i data-lucide="award" class="w-5 h-5 text-gold"></i>
+                    <span class="text-sm text-zinc-400">Busan — <span class="text-gold">Ən Yaxşı Rejissor</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- PREMIERE / WHERE TO WATCH -->
+    <section id="premiere" class="relative py-24 md:py-32 overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="max-w-3xl mx-auto text-center mb-20">
+                <span class="font-mono text-xs text-gold tracking-[0.3em] uppercase fade-up">Premyera</span>
+                <h2 class="font-display text-4xl md:text-5xl font-semibold mt-4 mb-6 fade-up" style="transition-delay: 0.1s;">
+                    İzləmək Üçün
+                </h2>
+                <div class="section-divider w-24 mx-auto fade-up" style="transition-delay: 0.2s;"></div>
+            </div>
+
+            <!-- Countdown -->
+            <div class="flex justify-center gap-6 md:gap-10 mb-20 fade-up" style="transition-delay: 0.3s;">
+                <div class="text-center">
+                    <div class="font-mono text-4xl md:text-6xl font-bold text-gradient" id="days">00</div>
+                    <div class="text-xs text-zinc-500 mt-2 tracking-wider uppercase">Gün</div>
+                </div>
+                <div class="text-accent/40 text-4xl md:text-6xl font-light">:</div>
+                <div class="text-center">
+                    <div class="font-mono text-4xl md:text-6xl font-bold text-gradient" id="hours">00</div>
+                    <div class="text-xs text-zinc-500 mt-2 tracking-wider uppercase">Saat</div>
+                </div>
+                <div class="text-accent/40 text-4xl md:text-6xl font-light">:</div>
+                <div class="text-center">
+                    <div class="font-mono text-4xl md:text-6xl font-bold text-gradient" id="minutes">00</div>
+                    <div class="text-xs text-zinc-500 mt-2 tracking-wider uppercase">Dəqiqə</div>
+                </div>
+                <div class="text-accent/40 text-4xl md:text-6xl font-light">:</div>
+                <div class="text-center">
+                    <div class="font-mono text-4xl md:text-6xl font-bold text-gradient" id="seconds">00</div>
+                    <div class="text-xs text-zinc-500 mt-2 tracking-wider uppercase">Saniyə</div>
+                </div>
+            </div>
+
+            <!-- Cinemas & Platforms -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Cinema -->
+                <div class="bg-zinc-950 border border-zinc-800/50 rounded-2xl p-8 card-glow transition-all duration-500 fade-up" style="transition-delay: 0.4s;">
+                    <div class="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+                        <i data-lucide="clapperboard" class="w-7 h-7 text-accent-light"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-semibold mb-2">Kinoteatrlar</h3>
+                    <p class="text-zinc-400 text-sm mb-6">IMAX & Dolby Atmos formatında</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center justify-between py-2 border-b border-zinc-800/30">
+                            <span class="text-sm">CinemaPlus, Flame Towers</span>
+                            <span class="text-xs text-gold font-mono">IMAX</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-zinc-800/30">
+                            <span class="text-sm">CinemaPlus, Ganjlik Mall</span>
+                            <span class="text-xs text-zinc-400 font-mono">Dolby</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-zinc-800/30">
+                            <span class="text-sm">Nərimanov Kino Mərkəzi</span>
+                            <span class="text-xs text-zinc-400 font-mono">2D</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2">
+                            <span class="text-sm">AFM Cinema, 28 Mall</span>
+                            <span class="text-xs text-gold font-mono">IMAX</span>
+                        </div>
+                    </div>
+
+                    <button onclick="showToast('Bilet saytı tezliklə açılacaq!')" class="btn-primary w-full py-3 rounded-xl text-sm font-medium relative z-10">
+                        <span class="relative z-10">Bilet Al →</span>
+                    </button>
+                </div>
+
+                <!-- Streaming -->
+                <div class="bg-zinc-950 border border-zinc-800/50 rounded-2xl p-8 card-glow transition-all duration-500 fade-up" style="transition-delay: 0.5s;">
+                    <div class="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center mb-6">
+                        <i data-lucide="tv" class="w-7 h-7 text-gold"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-semibold mb-2">Online Platformlar</h3>
+                    <p class="text-zinc-400 text-sm mb-6">Premyeradan 45 gün sonra</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center justify-between py-2 border-b border-zinc-800/30">
+                            <span class="text-sm">Netflix Türkçe</span>
+                            <span class="text-xs text-zinc-500 font-mono">15 Dek 2025</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-zinc-800/30">
+                            <span class="text-sm">Disney+ Hotstar</span>
+                            <span class="text-xs text-zinc-500 font-mono">20 Dek 2025</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-zinc-800/30">
+                            <span class="text-sm">Amazon Prime Video</span>
+                            <span class="text-xs text-zinc-500 font-mono">01 Yan 2026</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2">
+                            <span class="text-sm">Apple TV+</span>
+                            <span class="text-xs text-zinc-500 font-mono">01 Yan 2026</span>
+                        </div>
+                    </div>
+
+                    <button onclick="showToast('Xatırlatma qeydə alındı! Premyera yaxınlaşanda bildiriş alacaqsınız.')" class="btn-outline w-full py-3 rounded-xl text-sm font-medium">
+                        <span class="flex items-center justify-center gap-2">
+                            <i data-lucide="bell" class="w-4 h-4"></i>
+                            Xatırlat
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- NEWSLETTER / CTA SECTION -->
+    <section class="relative py-24 md:py-32 overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://picsum.photos/seed/qflower-cta/1920/800.jpg" alt="" class="w-full h-full object-cover opacity-10">
+            <div class="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black"></div>
+        </div>
+        
+        <div class="max-w-3xl mx-auto px-6 relative z-10 text-center">
+            <div class="w-20 h-20 rounded-full border border-accent/30 flex items-center justify-center mx-auto mb-8 float">
+                <i data-lucide="flower-2" class="w-8 h-8 text-accent"></i>
+            </div>
+            <h2 class="font-display text-3xl md:text-5xl font-semibold mb-6 fade-up">
+                Qaranlıq səni<br>
+                <span class="text-gradient">gözləyir</span>
+            </h2>
+            <p class="text-zinc-400 text-lg mb-10 fade-up" style="transition-delay: 0.1s;">
+                Filmin ən son xəbərləri, arxası plan kadrları və eksklüziv məzmun üçün abunə ol.
+            </p>
+            
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto fade-up" style="transition-delay: 0.2s;" onsubmit="handleSubscribe(event)">
+                <input type="email" placeholder="E-poçt ünvanınız" required
+                    class="flex-1 px-6 py-4 rounded-xl bg-zinc-950 border border-zinc-800/50 text-white placeholder-zinc-600 focus:outline-none focus:border-gold/50 transition-colors duration-300 text-sm">
+                <button type="submit" class="btn-primary px-8 py-4 rounded-xl text-sm font-medium relative z-10 whitespace-nowrap">
+                    <span class="relative z-10">Abunə Ol</span>
+                </button>
+            </form>
+
+            <p class="text-xs text-zinc-600 mt-4 fade-up" style="transition-delay: 0.3s;">Spam yoxdur. İstədiyiniz zaman çıxıla bilər.</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-zinc-800/50 py-16">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <!-- Brand -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center">
+                            <div class="w-2 h-2 rounded-full bg-accent"></div>
+                        </div>
+                        <span class="font-display text-lg tracking-wide">QARA ÇİÇƏK</span>
+                    </div>
+                    <p class="text-zinc-500 text-sm leading-relaxed max-w-sm mb-6">
+                        Orxan Əlizadənin rejissorluğu ilə çəkilmiş psixoloji triller. Azərbaycan-Türkiyə birgə istehsalı. 2025.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" onclick="showToast('Instagram səhifəsi tezliklə!'); return false;" class="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-gold hover:border-gold/30 transition-all duration-300">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" onclick="showToast('Twitter səhifəsi tezliklə!'); return false;" class="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-gold hover:border-gold/30 transition-all duration-300">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" onclick="showToast('YouTube kanalı tezliklə!'); return false;" class="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-gold hover:border-gold/30 transition-all duration-300">
+                            <i data-lucide="youtube" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" onclick="showToast('Facebook səhifəsi tezliklə!'); return false;" class="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-gold hover:border-gold/30 transition-all duration-300">
+                            <i data-lucide="facebook" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-xs font-mono text-zinc-500 tracking-wider uppercase mb-6">Film</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#synopsis" class="text-sm text-zinc-400 hover:text-white transition-colors">Süjet</a></li>
+                        <li><a href="#cast" class="text-sm text-zinc-400 hover:text-white transition-colors">Aktyorlar</a></li>
+                        <li><a href="#gallery" class="text-sm text-zinc-400 hover:text-white transition-colors">Qalereya</a></li>
+                        <li><a href="#reviews" class="text-sm text-zinc-400 hover:text-white transition-colors">Rəylər</a></li>
+                        <li><a href="#" onclick="playTrailer(); return false;" class="text-sm text-zinc-400 hover:text-white transition-colors">Treyler</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="text-xs font-mono text-zinc-500 tracking-wider uppercase mb-6">Əlaqə</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" onclick="showToast('Press-kit tezliklə!"); return false;" class="text-sm text-zinc-400 hover:text-white transition-colors">Press Kit</a></li>
+                        <li><a href="#" onclick="showToast('Kontakt səhifəsi tezliklə!'); return false;" class="text-sm text-zinc-400 hover:text-white transition-colors">Əlaqə</a></li>
+                        <li><a href="#" onclick="return false;" class="text-sm text-zinc-400 hover:text-white transition-colors">Gizlilik Siyasəti</a></li>
+                        <li><a href="#" onclick="return false;" class="text-sm text-zinc-400 hover:text-white transition-colors">İstifadə Şərtləri</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section-divider mb-8"></div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-zinc-600">
+                    © 2025 Qara Çiçək Film. Bütün hüquqlar qorunur. Buta Film & Karma Film birgə istehsalı.
+                </p>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-zinc-700 font-mono">DESIGNED BY</span>
+                    <span class="text-xs text-zinc-500">STUDIO NOIR</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TRAILER MODAL -->
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm hidden" id="trailerModal">
+        <button onclick="closeTrailer()" class="absolute top-6 right-6 w-12 h-12 rounded-full border border-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white transition-all duration-300 z-10">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <div class="w-full max-w-4xl mx-6">
+            <div class="video-container rounded-2xl overflow-hidden border border-zinc-800/50">
+                <div class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950 rounded-2xl">
+                    <div class="w-24 h-24 rounded-full border-2 border-accent/50 flex items-center justify-center mb-6 pulse-slow">
+                        <i data-lucide="play" class="w-10 h-10 ml-1 text-accent-light"></i>
+                    </div>
+                    <p class="font-display text-2xl mb-2">QARA ÇİÇƏK</p>
+                    <p class="text-zinc-500 text-sm mb-1">Rəsmi Treyler</p>
+                    <p class="text-zinc-700 text-xs font-mono">Treyler tezliklə yayımlanacaq</p>
+                    <div class="soundwave mt-6">
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="fixed bottom-6 right-6 z-50 toast" id="toast">
+        <div class="bg-zinc-900 border border-zinc-700/50 rounded-xl px-6 py-4 flex items-center gap-3 shadow-2xl max-w-sm">
+            <div class="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="check" class="w-4 h-4 text-gold"></i>
+            </div>
+            <p class="text-sm text-zinc-300" id="toastMessage">Mesaj</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // ===== SCROLL PROGRESS BAR =====
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        });
+
+        // ===== NAVBAR SCROLL EFFECT =====
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const scrollTop = window.scrollY;
+            if (scrollTop > 100) {
+                navbar.style.borderBottom = '1px solid rgba(63,63,70,0.3)';
+            } else {
+                navbar.style.borderBottom = 'none';
+            }
+            lastScroll = scrollTop;
+        });
+
+        // ===== MOBILE MENU =====
+        let mobileOpen = false;
+        function toggleMobile() {
+            mobileOpen = !mobileOpen;
+            document.getElementById('mobileMenu').classList.toggle('open', mobileOpen);
+            document.body.style.overflow = mobileOpen ? 'hidden' : '';
+        }
+
+        // ===== TRAILER MODAL =====
+        function playTrailer() {
+            document.getElementById('trailerModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+        function closeTrailer() {
+            document.getElementById('trailerModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('trailerModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTrailer();
+        });
+
+        // ===== TOAST =====
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        // ===== SUBSCRIBE =====
+        function handleSubscribe(e) {
+            e.preventDefault();
+            showToast('Uğurla abunə oldunuz! Xəbərlər tezliklə gələcək.');
+            e.target.reset();
+        }
+
+        // ===== COUNTDOWN =====
+        function updateCountdown() {
+            const target = new Date('2025-10-31T20:00:00+04:00');
+            const now = new Date();
+            const diff = target - now;
+
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // ===== SCROLL ANIMATIONS =====
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up, .fade-left, .fade-right, .scale-in, .line-anim').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===== HERO PARALLAX =====
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroImage = document.getElementById('heroImage');
+            if (heroImage && scrollY < window.innerHeight) {
+                heroImage.style.transform = `scale(1.05) translateY(${scrollY * 0.15}px)`;
+            }
+        });
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeTrailer();
+                if (mobileOpen) toggleMobile();
+            }
+        });
+
+        // ===== GALLERY LABELS =====
+        const galleryLabels = [
+            'Bakı, İçərişəhər — Gecə',
+            'Quyu Kəşfi',
+            'Laboratoriya Səhnəsi',
+            'Yuxu Sekvensı',
+            'Təqib Səhnəsi',
+            'Final — Qaranlıq'
+        ];
+        document.querySelectorAll('.gallery-item').forEach((item, i) => {
+            if (!item.querySelector('.gallery-label')) {
+                const label = document.createElement('div');
+                label.className = 'absolute bottom-4 left-4 z-10 opacity-0 gallery-label transition-opacity duration-500';
+                label.innerHTML = `<span class="text-xs font-mono text-gold tracking-wider">${galleryLabels[i] || ''}</span>`;
+                item.appendChild(label);
+            }
+        });
+    </script>
+</body>
+</html>
